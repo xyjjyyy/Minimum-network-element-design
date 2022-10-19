@@ -17,6 +17,8 @@ const (
 	DeviceId1 = 0
 	DeviceId2 = 1
 	DeviceId3 = 2
+	DeviceId4 = 3
+	DeviceId5 = 4
 )
 
 const (
@@ -122,7 +124,7 @@ func (n *NetEle) SendToUpper(conn *net.UDPConn, data []byte) error {
 
 // 如果index为nil 则发送给全部下层除了recvIndex
 // index!=nil 则正常发送给index[] 全部的端口
-// 设置recvIndex为0可以忽略这个参数
+// 设置recvPort为0可以忽略这个参数
 func (n *NetEle) SendToLower(conn *net.UDPConn, port []int, data []byte, recvPort int) error {
 	var portSend []int
 	if port == nil {

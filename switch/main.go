@@ -12,9 +12,7 @@ import (
 // 基本配置
 var (
 	deviceId = info.DeviceId2
-	// model     = info.Model1 //TODO：等会考虑
-	layer = info.LNK
-	// macSource = info.IdToMacTable[deviceId]
+	layer    = info.LNK
 )
 
 // TODO:之后要改成高并发形式
