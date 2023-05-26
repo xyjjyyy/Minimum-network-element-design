@@ -59,6 +59,7 @@ func (w *Window) SlideWindowForSend() (*pdu.Frame, error) {
 		return frame, nil
 	}
 	w.adjust()
+
 	if w.FrameNeedSend.Len() != 0 {
 		frame := w.FrameNeedSend.Remove(w.FrameNeedSend.Front()).(*pdu.Frame)
 
@@ -135,11 +136,11 @@ func (w *Window) SlideWindowForAck(frameAck *pdu.Frame) error {
 
 func (w *Window) SlideWindowForErr(frameErr *pdu.Frame) error {
 	if frameErr == nil {
-		return errors.New("frameAck is nil")
+		return errors.New("frameErr is nil")
 	}
 
 	if w.FrameWaitAck.Len() == 0 {
-		return errors.New("frameWaitErr is empty")
+		return errors.New("frameErr is empty")
 	}
 
 	w.mutex.Lock()
@@ -157,12 +158,14 @@ func (w *Window) SlideWindowForErr(frameErr *pdu.Frame) error {
 }
 
 func (w *Window) StartClock(frame *pdu.Frame) {
-	fmt.Printf("serialNum:%d 开始时钟\n", frame.SerialNum)
+	fmt.Printf("serialNum:%d start clock\n", frame.SerialNum)
 	select {
 	case <-time.After(time.Millisecond * time.Duration(frame.Duration)):
+		w.mutex.Lock()
 		w.FrameNeedReSend.PushFront(frame)
-		fmt.Printf("serialNum:%d 超时\n", frame.SerialNum)
+		w.mutex.Unlock()
+		fmt.Printf("serialNum:%d data:%s out of time\n", frame.SerialNum, frame.Data)
 	case <-frame.Done:
-		fmt.Printf("serialNum:%d 时钟终止\n", frame.SerialNum)
+		fmt.Printf("serialNum:%d data:%s send successfully\n", frame.SerialNum, frame.Data)
 	}
 }

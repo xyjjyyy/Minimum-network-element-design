@@ -2,29 +2,26 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
-	"network/utils"
+	"network/host/pdu"
 	"strconv"
 	"strings"
 	"time"
 )
 
 func main() {
-	// t := utils.ByteToBit([]byte{127, 1})
-	// fmt.Println(t)
-	// s := "86CE59A1239B"
-	// s = strings.ToLower(s)
-	// // s="1234567891233"
-	// b := utils.Hex12ToBit48(s)
-	// fmt.Println(b)
+	test2()
+}
 
-	// h := utils.Bit48ToHex12(b)
-	// fmt.Println(h)
+func test2() {
+	frame := pdu.CreateAckFrameByte(8, "123456789012", "123456789012")
 
-	fmt.Println(utils.Code([]byte{127, 27}))
-	IP := ByteToIP([]byte{123, 234, 23, 234})
-	b := IPToByte(IP)
-	fmt.Println(IP, b)
+	if f, err := pdu.SplitFrame(frame); err != nil {
+		log.Fatal(err)
+	} else {
+		fmt.Println(string(f.Data))
+	}
 }
 
 func test() string {
