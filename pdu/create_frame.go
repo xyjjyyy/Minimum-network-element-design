@@ -30,21 +30,3 @@ func CreateAckFrameByte(SerialNum uint64, macSource string, macTarget string) []
 	frame.GetCRC32()
 	return frame.AddLocator()
 }
-
-func CreateErrFrameByte(SerialNum uint64, macSource string, macTarget string) []byte {
-	frame := CreateErrFrame(SerialNum, macSource, macTarget)
-	return frame.AddLocator()
-}
-
-func CreateErrFrame(SerialNum uint64, macSource string, macTarget string) *Frame {
-	frame := New()
-	frame.FrameType = 2
-	frame.SerialNum = SerialNum
-	frame.Data = []byte{}
-	frame.MacSource, frame.MacTarget = macTarget, macSource
-
-	// 获得CRC校验码
-	frame.GetCRC32()
-
-	return frame
-}

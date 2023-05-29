@@ -3,41 +3,108 @@ package main
 import (
 	"fmt"
 	"log"
-	"math/rand"
-	"network/host/pdu"
+	"network/pdu"
+	"network/utils"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func main() {
-	test2()
+	// fmt.Println(utils.BitToByte("000000000001110110000110110011100101100100100100001000111001101101000000100100011110001000111101101100000010010001010100011001010111001101110100001"))
+	test1()
+}
+
+func test1() {
+	frame := pdu.CreateFrame("Test8", "86ce5924239b", "4091e23db024")
+	frameByte := frame.AddLocator()
+	frame, err := pdu.SplitFrame(frameByte)
+	if err != nil {
+		log.Println(err)
+	} else {
+		fmt.Println(frame.Data)
+	}
+
 }
 
 func test2() {
-	frame := pdu.CreateAckFrameByte(8, "123456789012", "123456789012")
-
-	if f, err := pdu.SplitFrame(frame); err != nil {
-		log.Fatal(err)
-	} else {
-		fmt.Println(string(f.Data))
+	// s := "Hello World"
+	// s0 := utils.ByteToBit([]byte(s))
+	// fmt.Println("0:", s0)
+	b := AddLocator("1111110011111011111")
+	_, err := removeLocator(b)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
-func test() string {
-	var s string
+// 移除定位符
+func removeLocator(dataWithLocator []byte) ([]byte, error) {
+	var dataByte []byte
 
-	rand.Seed(time.Now().UnixMicro())
-	for len(s) < 12 {
-		randNum := rand.Intn('f' - '0')
+	s := utils.ByteToBit(dataWithLocator)
+	firstLoactor, secondLocator := -1, -1
+	num := 0
+	frequency := 0
 
-		if randNum < 'a'-'0' && randNum > '9'-'0' {
-			continue
+	for i := 0; i < len(s); i++ {
+		if s[i] == '1' {
+			num++
+		} else {
+			num = 0
 		}
-		t := rune('0' + randNum)
-		s += string(t)
+		if num == 6 {
+			frequency++
+			i += 2
+			if frequency == 1 {
+				firstLoactor = i
+			} else if frequency == 2 {
+				secondLocator = i - 8
+			}
+			num = 0
+		}
 	}
-	return s
+	if frequency != 2 {
+		return nil, fmt.Errorf("locator not found")
+	}
+	s = s[firstLoactor:secondLocator]
+
+	for i := 0; i < len(s); i++ {
+		if s[i] == '1' {
+			num++
+		} else {
+			num = 0
+		}
+		if num == 5 {
+			s = s[:i+1] + s[i+2:]
+			num = 0
+		}
+	}
+	fmt.Println("s:", s)
+	// 转换成byte类型
+	dataByte = utils.BitToByte(s)
+	return dataByte, nil
+}
+
+func AddLocator(s string) []byte {
+	// 获得需要CRC32校验的部分 包含 帧类型 Mac地址 帧序号 数据
+	num := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == '1' {
+			num++
+		} else {
+			num = 0
+		}
+
+		if num == 5 {
+			s = s[:i+1] + "0" + s[i+1:]
+			num = 0
+			i++
+		}
+	}
+	fmt.Println("l:", s)
+	// 添加定位符
+	s = "01111110" + s + "01111110"
+	return utils.BitToByte(s)
 }
 
 func ByteToIP(b []byte) string {

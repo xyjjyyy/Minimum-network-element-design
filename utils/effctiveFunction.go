@@ -29,14 +29,13 @@ func BitToByte(s string) []byte {
 	for i := 0; i < len(s); i += 8 {
 		var b int
 		for j := 0; j < 8 && i+j < len(s); j++ {
-			if string(s[i+j]) == "1" {
+			if s[i+j] == '1' {
 				b += 1 << (7 - j)
 			}
 		}
 
 		res = append(res, byte(b))
 	}
-
 	return res
 }
 
@@ -65,7 +64,7 @@ func Code(dataByte []byte) uint64 {
 // Hex12ToBit48 并非要真正把它们转换成二进制 而是要制定一套规则 编解码的规则
 func Hex12ToBit48(hexString string) string {
 	base, _ := strconv.ParseInt(hexString, 16, 64)
-	return fmt.Sprintf("%48s", strconv.FormatInt(base, 2))
+	return fmt.Sprintf("%048s", strconv.FormatInt(base, 2))
 }
 
 func Bit48ToHex12(bitString string) string {

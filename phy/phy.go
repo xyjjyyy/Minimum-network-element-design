@@ -1,7 +1,6 @@
 package phy
 
 import (
-	"fmt"
 	"math/rand"
 	"network/utils"
 	"time"
@@ -33,21 +32,17 @@ func New(prob int) *Phy {
 func (p *Phy) HandleFrame(frame []byte) []byte {
 	var frameSend string
 	s := utils.ByteToBit(frame)
-	//log.Println(frame)
-	//log.Println(s, len(s))
 	for _, f := range s {
 		switch p.judge() {
 		case change0:
 			frameSend += string(f)
 		case change1:
-			fmt.Print("1")
 			if f == '1' {
 				frameSend += "0"
 			} else {
 				frameSend += "1"
 			}
 		case change2:
-			fmt.Println("2")
 		}
 	}
 
@@ -67,7 +62,6 @@ func (p *Phy) judge() int {
 	case ExtraHard:
 		prob = 0.005
 	}
-	fmt.Println(r, randNum*prob)
 	if r < int(randNum*prob) {
 		return change1
 	}

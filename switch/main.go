@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"network/host/pdu"
 	"network/info"
+	"network/pdu"
 	"network/switch/macTable"
 )
 

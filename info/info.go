@@ -172,7 +172,6 @@ func (n *NetEle) SendToUpper(conn *net.UDPConn, data []byte) error {
 // index!=nil 则正常发送给index[] 全部的端口
 // 设置recvPort为0可以忽略这个参数
 func (n *NetEle) SendToLower(conn *net.UDPConn, port []int, data []byte, recvPort int) error {
-	//fmt.Println(n.LowerLayer)
 	var portSend []int
 	if port == nil {
 		for _, p := range n.LowerLayer {
