@@ -38,7 +38,5 @@ func (t *Table) QueryTableByDesIP(DesIP string) (*RoutingTable, bool) {
 	if v, ok := t.Routing.Load(DesIP); ok {
 		return v.(*RoutingTable), ok
 	}
-	return nil, false// 先不管找不到的情况
+	return nil, false // 先不管找不到的情况
 }
-
-

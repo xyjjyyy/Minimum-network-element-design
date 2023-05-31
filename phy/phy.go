@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const randNum = 1000
+const randNum = 1000000000
 const (
 	Normal = iota
 	LittleHard
@@ -58,10 +58,11 @@ func (p *Phy) judge() int {
 	case Normal:
 		return change0
 	case LittleHard:
-		prob = 0.001
+		prob = 0.00001 // 十万分之二的错误率(每bit)
 	case ExtraHard:
-		prob = 0.005
+		prob = 0.0005 // 十万分之十的错误率(每bit)
 	}
+	// fmt.Println(r)
 	if r < int(randNum*prob) {
 		return change1
 	}

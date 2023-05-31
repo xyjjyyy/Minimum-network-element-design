@@ -5,10 +5,10 @@ const (
 )
 
 type Packet struct {
-	Data     []byte
-	IPSource string
-	IPTarget string
-	FrameType []byte
+	Data           []byte
+	IPSource       string
+	IPTarget       string
+	FrameType      []byte
 	FrameSerialNUm []byte
 }
 

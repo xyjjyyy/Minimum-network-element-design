@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 )
@@ -41,7 +42,7 @@ func TestChan(t *testing.T) {
 }
 
 func TestScan(t *testing.T) {
-
-	a := "fasdfas\n"
-	fmt.Println(a[len(a)-1])
+	a := "10020--10010----"
+	arr := strings.Split(a, "--")
+	fmt.Println(arr,len(arr))
 }

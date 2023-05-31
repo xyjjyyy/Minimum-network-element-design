@@ -7,11 +7,37 @@ import (
 	"network/utils"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 )
 
 func main() {
-	// fmt.Println(utils.BitToByte("000000000001110110000110110011100101100100100100001000111001101101000000100100011110001000111101101100000010010001010100011001010111001101110100001"))
-	test1()
+	test()
+}
+func test() {
+	var mp sync.Map
+
+	t := time.NewTimer(2 * time.Second)
+	mp.Store("1", t)
+
+	fmt.Println(t, mp)
+
+	go func() {
+		t0, ok := mp.Load("1")
+		if ok {
+			<-t0.(*time.Timer).C
+			fmt.Println("time out")
+		}
+	}()
+
+	time.Sleep(1 * time.Second)
+	t1, ok := mp.Load("1")
+	if ok {
+		t1.(*time.Timer).Reset(3 * time.Second)
+	}
+	time.Sleep(2 * time.Second)
+	fmt.Println("test")
+	time.Sleep(2 * time.Second)
 }
 
 func test1() {

@@ -27,7 +27,6 @@ func SplitFrameAndCreatePacket(packetByte []byte) (*Packet, error) {
 	return packet, nil
 }
 
-
 func ByteToIP(b []byte) string {
 	var IP string
 	for i := 0; i < len(b); i++ {
